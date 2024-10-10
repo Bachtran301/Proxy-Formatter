@@ -1,4 +1,22 @@
 const fs = require('fs');
+const colors = require('colors');
+const printLogo = require("./src/logo");
+
+// Function to get the current time in [HH:MM:SS AM/PM] format
+function getCurrentTime() {
+    const now = new Date();
+    let hours = now.getHours();
+    let minutes = now.getMinutes();
+    let seconds = now.getSeconds();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+
+    hours = hours % 12;
+    hours = hours ? hours : 12; // If hour is 0, set to 12 (for 12 AM/PM)
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+    seconds = seconds < 10 ? '0' + seconds : seconds;
+
+    return `[${hours}:${minutes}:${seconds} ${ampm}]`;
+}
 
 // Function to format proxy into the format http://user:pass@ip:port
 function formatProxy(proxy) {
@@ -43,15 +61,14 @@ function formatProxy(proxy) {
 
             formattedProxy = `http://${user}:pass@${ip}:${port}`;
         } else {
-            console.error(`Invalid proxy format: ${proxy}`);
+            console.error(`${getCurrentTime()} [${'Error'.red}] Invalid proxy format: ${proxy}`);
         }
     } catch (error) {
-        console.error(`Error formatting proxy ${proxy}:`, error.message);
+        console.error(`${getCurrentTime()} [${'Error'.red}] Error formatting proxy ${proxy}:`, error.message);
     }
 
     return formattedProxy;
 }
-
 
 // Function to convert proxies and save them to a file
 function convertProxies(inputFile, outputFile) {
@@ -73,11 +90,13 @@ function convertProxies(inputFile, outputFile) {
             if (err) {
                 console.error(`Could not write to file ${outputFile}:`, err);
             } else {
-                console.log(`Formatted proxies saved to ${outputFile}`);
+                console.log(`${getCurrentTime()} ${'[Done] Formatted proxies saved to '.green}${outputFile.green}`);
             }
         });
     });
 }
 
+// Print the logo
+printLogo();
 // Run the conversion
 convertProxies('inproxy.txt', 'outproxy.txt');
