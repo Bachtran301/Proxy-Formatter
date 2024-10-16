@@ -96,7 +96,6 @@ function convertProxies(inputFile, outputFile) {
     });
 }
 
-// Print the logo
+
 printLogo();
-// Run the conversion
 convertProxies('inproxy.txt', 'outproxy.txt');
